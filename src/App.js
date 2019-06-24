@@ -1,92 +1,77 @@
 import React, { Component } from 'react';
 import './App.css';
 import axios from 'axios';
+import { Card, CardImg, CardText, CardBody, Button } from 'reactstrap';
+
+
 let data;
+// let likes_count;
 class App extends Component{
 
   constructor(props){
+    console.log('cns called');
     super(props);
-    this.state={post: [],post1 : [],dummy : ''}
+    this.state={post: '',likes_count:''}
   }
 
-  componentDidMount(){
-      // curl -F 'client_id=CLIENT_ID' \
-      // -F 'client_secret=CLIENT_SECRET' \
-      // -F 'grant_type=authorization_code' \
-      // -F 'redirect_uri=AUTHORIZATION_REDIRECT_URI' \
-      // -F 'code=CODE' \
-      // https://api.instagram.com/oauth/access_token
-  }
+  // componentDidMount(){
+  //   console.log('cdm called');
+  //   axios.get('https://graph.facebook.com/v3.3/me?fields=feed{picture,message,object_id,shares,likes.summary(true).limit(0)}')
+  //   .then((res) => {
+  //     console.log('res is',res)
+  //   })
+  // }
 
-  getData = () => {
-    //likes count: me?fields=feed{object_id,likes.summary(true).limit(0)}
-    //comments: me?fields=feed{object_id,likes,comments
-    //shares count: "me?fields=feed{object_id,likes,comments,shares}"
-    window.FB.api("me?fields=feed{storyID=thelarch}", (response) => {
-      console.log('response for likes',response);
-      let a = response;
-      console.log('response for likes',a);
-      // console.log('response for likes',a[0].comments.data[0].message);
-      // this.setState({dummy:a[0].comments.data[0].message});
-      // console.log('response for likes',Object.keys(a.likes).map((val) => {
-      //   return(
-      //     console.log('val is',val)
-      //   )
-      // }));
-      // console.log('a is',a.map((val) => {
-      //   return console.log('map values are',val.likes)
-      // }))
-    })
-  }
+  // getData = () => {
+  //   //likes count: me?fields=feed{object_id,likes.summary(true).limit(0)}
+  //   //comments: me?fields=feed{object_id,likes,comments
+  //   //shares count: "me?fields=feed{object_id,likes,comments,shares}"
+  //   window.FB.api("me?fields=feed{storyID=thelarch}", (response) => {
+  //     console.log('response for likes',response);
+  //     let a = response;
+  //     console.log('response for likes',a);
+  //   })
+  // }
 
-  getPic = () => {
+  getPostDetails = () => {
     window.FB.api(
-      "me?fields=posts{message,picture}",
-      {
-          "redirect": false,
-          "height": "200",
-          "type": "large",
-          "width": "200"
-      },
-      function (response) {
+      "me?fields=feed{picture,message,object_id,shares,likes.summary(true).limit(0)},videos",
+       (response) => {
         if (response && !response.error) {
           // console.log('pic res',response)
-          let a;
-          a = response;
-          console.log(a.posts.data)
-          this.setState({post1:a.posts.data});
-          // this.setState({post1 : a.})
-          // console.log('set state val',this.state.post1)
+          data = response.feed.data;
+          this.setState({post:data});
+          console.log('@',data)
         }
-      }.bind(this)
+      }
   );
   }
   
 
   render(){
+    console.log('render called');
     return(
       <div className="App">
-        <h1>My FB posts: {this.state.dummy}</h1>
-
-        {/* {this.state.post.map((val,i) => {
-          return (
-            <tr key={i}>
-              <td>{val.comments}</td>
-              <td>{val.likes}</td>
-            </tr>
-          )
-        })} */}
-        {this.state.post1.map((val,i) => {
+        <h1>My FB posts:</h1>
+        {this.state.post && this.state.post.map((val,i) => {
             return (
-            <tr key={i}>
-              <td>{val.message}</td>
-              <td><img src={val.picture} /></td>
-             </tr>
+            <Card key={i} style={{border:'solid' }}>
+              <CardBody>
+              {/* <video width="320" height="240" controls>
+                <source src={val.picture} type="video/mp4"/>
+                <source src={val.picture} type="video/ogg"/>
+                Your browser does not support the video tag.
+              </video> */}
+                <CardImg top src={val.picture} alt="" />
+                <CardText>{val.message}</CardText>
+                {val.likes.summary.total_count > 0 && <CardText>Likes: {val.likes.summary.total_count}</CardText>}
+                {console.log("likes_count is",val.shares && val.shares.count > 0)}
+                {val.shares && val.shares.count > 0 && <CardText>Shares: {val.shares && val.shares.count}</CardText>}
+              </CardBody>
+           </Card>
             )
           })}
-          
-        <button onClick={this.getData}>Click</button>
-        <button onClick={this.getPic}>Picture</button>
+        <Button onClick={this.getPostDetails}>Picture</Button>
       </div>
     )
   }
