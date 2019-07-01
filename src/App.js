@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import InstaGram from './components/InstaGram';
+import Twitter from './components/Twitter';
 
 class App extends Component{
 
@@ -12,7 +12,7 @@ class App extends Component{
   render(){
     return(
       <div className="App">
-        <InstaGram/>
+        <Twitter/>
       </div>
     )
   }
