@@ -12,7 +12,7 @@ constructor(props){
 
 
     getResponse = () => {
-        axios.get('http://api.instagram.com/v1/users/self/media/recent/?access_token=5665661776.48362ab.55882bc1f9d84fa1a1a2af5293152cd7')
+        axios.get('http://api.instagram.com/v1/users/self/media/recent/?access_token=5665661776.48362ab.2886c69624414053b342c4f85fbe3463')
         .then((res) => {
            console.log('res', res.data.data);
            this.setState({data:res.data.data});

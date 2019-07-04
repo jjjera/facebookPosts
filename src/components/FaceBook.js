@@ -1,47 +1,50 @@
 import React, { Component } from 'react';
-import './App.css';
-import axios from 'axios';
+import '../App.css';
+// import axios from 'axios';
 import { Card, CardImg, CardText, CardBody, Button } from 'reactstrap';
 
 
 let data;
-// let likes_count;
 class FaceBook extends Component{
 
   constructor(props){
-    console.log('cns called');
+    // console.log('cns called');
     super(props);
-    this.state={post: '',likes_count:''}
+    this.state={
+      post: '',
+      likes_count:'',
+      fbpost1:'',
+      fbpost2:'',
+      caption1:'',
+      caption2:'',
+      likes1:'',
+      likes2:'',
+      userfirstname1:'',
+      userlasetname1:'',
+     
+    }
   }
-
-  // componentDidMount(){
-  //   console.log('cdm called');
-  //   axios.get('https://graph.facebook.com/v3.3/me?fields=feed{picture,message,object_id,shares,likes.summary(true).limit(0)}')
-  //   .then((res) => {
-  //     console.log('res is',res)
-  //   })
-  // }
-
-  // getData = () => {
-  //   //likes count: me?fields=feed{object_id,likes.summary(true).limit(0)}
-  //   //comments: me?fields=feed{object_id,likes,comments
-  //   //shares count: "me?fields=feed{object_id,likes,comments,shares}"
-  //   window.FB.api("me?fields=feed{storyID=thelarch}", (response) => {
-  //     console.log('response for likes',response);
-  //     let a = response;
-  //     console.log('response for likes',a);
-  //   })
-  // }
 
   getPostDetails = () => {
     window.FB.api(
-      "me?fields=feed{picture,message,object_id,shares,likes.summary(true).limit(0)},videos",
+      "me?fields=first_name,last_name,feed{picture,message,object_id,shares,likes.summary(true).limit(0)}",
        (response) => {
         if (response && !response.error) {
           // console.log('pic res',response)
-          data = response.feed.data;
-          this.setState({post:data});
-          console.log('@',data)
+        //  data = response.feed.data;
+        //  this.setState({post:data});
+          console.log('@',response)
+          this.setState({
+            fbpost1:(response.feed.data[0].picture) ? response.feed.data[0].picture : "",
+            fbpost2:(response.feed.data[1].picture) ? response.feed.data[1].picture : "",
+            caption1:(response.feed.data[0].message) ? response.feed.data[0].message : "",
+            caption2:(response.feed.data[1].message) ? response.feed.data[1].message : "",
+            likes1:response.feed.data[0].likes.summary.total_count,
+            likes2:response.feed.data[1].likes.summary.total_count,
+            userfirstname1:response.first_name,
+            userlasetname1:response.last_name,
+
+          })
         }
       }
   );
@@ -49,7 +52,7 @@ class FaceBook extends Component{
   
 
   render(){
-    console.log('render called');
+    // console.log('render called');
     return(
       <div className="App">
         <h1>My FB posts:</h1>
