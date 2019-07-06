@@ -21,23 +21,6 @@ class Feed extends Component{
         })
     }
 
-    // componentDidMount() {
-    //     console.log('getDetails called')
-    //     axios.get('http://localhost:8080/twitter/index.php')
-    //     .then((response) => {
-    //         this.setState({bearerToken:response.data});
-    //         console.log('response i$',this.state.bearerToken[2].text);
-    //         this.setState({
-    //             img:response.data[0].entities.media[0].media_url_https
-    //         })
-    //     })
-    //     .catch((error) => {
-    //         console.log('error block called',error);
-    //     })
-    //     console.log('outside block called')
-    // }
-
-
     render(){
         return(
             <div>
